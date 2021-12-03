@@ -6,14 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Hola cubo</title>
+    <style>
+      .btnpulsar {
+        position: absolute;
+        top: 8px;
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+      }
+    </style>
   </head>
   <body>
     <script src="./three.js"></script>
     <script>
       //crear una escena
       var scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x000333);
-      //scene.fog = new THREE.Fog(0xd3d3d3, 0, 750);
+      //   scene.background = new THREE.Color(0x000000);
+
+      //   //scene.fog = new THREE.Fog(0xd3d3d3, 0, 750);
+
+      //   var loader = new THREE.TextureLoader();
+
+      //   loader.load("./backgroundfaro.png", function (texture) {
+      //     scene.background = texture;
+      //   });
+
       //camara
       var camera = new THREE.PerspectiveCamera(
         75,
@@ -21,6 +39,13 @@
         0.1,
         1000
       );
+
+      var newcamera = new THREE.OrthographicCamera(5, -5, 5, -5, 3, 10);
+
+      helper = new THREE.CameraHelper(newcamera);
+
+      scene.add(helper);
+
       //crear redered
       var renderer = new THREE.WebGLRenderer();
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -31,24 +56,40 @@
       var geometry = new THREE.BoxGeometry(2, 2);
       var material = new THREE.MeshBasicMaterial({
         color: 0xd3d3d3,
-        wireframe: true,
+        wireframe: false,
       });
       var cube = new THREE.Mesh(geometry, material);
-
+      cube.position.z = -5;
       scene.add(cube);
 
-      camera.position.z = 5;
+      //   camera.position.z = 15;
+      //   camera.position.x = 12;
+      //   camera.position.y = 0;
 
+      var i = 0;
       //animacion
       var animate = function () {
         requestAnimationFrame(animate);
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
+
+        camera.lookAt(newcamera.position);
+        camera.position.x = Math.cos(i) * 30;
+        camera.position.z = Math.sin(i) * 30;
+
+        i += 0.01;
+        //cube.rotation.x += 0.01;
+        //cube.rotation.y += 0.01;
 
         renderer.render(scene, camera);
       };
 
       animate();
+
+      //eventos
+      const pulsame = () => {
+        scene.background = new THREE.Color("tomato");
+        scene.fog = new THREE.Fog("tomato", 0.3, 8);
+      };
     </script>
+    <button class="btnpulsar" onclick="pulsame()">pulsame</button>
   </body>
 </html>
